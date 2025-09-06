@@ -14,6 +14,8 @@ export default function ProductForm() {
   const [condition,setCondition] = useState('Good')
   const [loading,setLoading] = useState(false)
   const [err,setErr] = useState('')
+  const [image, setImage] = useState(null);
+
 
   const submit = async (e) => {
     e.preventDefault()
@@ -25,7 +27,7 @@ export default function ProductForm() {
         description: description.trim(),
         category,
         price: Number(price) || 0,
-        images: [],
+        images: [image],
         location: location.trim(),
         condition,
       })
@@ -53,11 +55,21 @@ export default function ProductForm() {
         <select value={condition} onChange={(e)=>setCondition(e.target.value)} style={{padding:'10px 12px', border:'1px solid #cbd5e1', borderRadius:8}}>
           {['New','Like New','Good','Fair','Poor'].map(c => <option key={c} value={c}>{c}</option>)}
         </select>
+        
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => {
+            if (e.target.files && e.target.files[0]) {
+              setImage(e.target.files[0]); // store the file in state
+            }
+          }}
+          style={{ padding: '10px 12px', border: '1px solid #cbd5e1', borderRadius: 8 }}
+        />
         <button disabled={loading} style={{padding:'10px 12px', background:'#1DB954', color:'#fff', borderRadius:8}}>
           {loading ? 'Submitting…' : 'Submit Listing'}
         </button>
         {err && <div style={{color:'#dc2626'}}>{err}</div>}
-        <button type="button" style={{padding:'10px 12px', border:'1px solid #cbd5e1', borderRadius:8}}>+ Add Image (Placeholder)</button>
       </form>
     </div>
   )

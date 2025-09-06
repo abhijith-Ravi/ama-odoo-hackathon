@@ -44,7 +44,17 @@ export default function Feed() {
           {items.map((it, i) => (
             <div key={it.id || i} style={{border:'1px solid #e5e7eb', borderRadius:12, overflow:'hidden', background:'#fff'}}>
               <Link to={`/product/${it.id || i}`} style={{display:'block'}}>
-                <div style={{height:176, background:'#e2e8f0', display:'flex', alignItems:'center', justifyContent:'center'}}>Image Placeholder</div>
+                {it.image ? (
+                  <img 
+                    src={it.image} 
+                    alt={it.title || 'Product'} 
+                    style={{width:'100%', height:176, objectFit:'cover'}}
+                  />
+                ) : (
+                  <div style={{height:176, background:'#e2e8f0', display:'flex', alignItems:'center', justifyContent:'center'}}>
+                    Image Placeholder
+                  </div>
+                )}
               </Link>
               <div style={{padding:12}}>
                 <div style={{fontWeight:600}}>{it.title || 'Untitled'}</div>
