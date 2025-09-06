@@ -20,7 +20,7 @@ A full-stack web application where users can **list, view, edit, and delete prod
 
 - **Frontend**: React, React Router, Axios  
 - **Backend**: Node.js, Express.js  
-- **Database**: Prisma ORM with PostgreSQL (can be swapped with MySQL/SQLite)  
+- **Database**: Prisma ORM with mysql 
 - **Auth**: JWT (JSON Web Token)  
 - **File Uploads**: Multer  
 
