@@ -1,160 +1,109 @@
-# ama-odoo-hackathon
+# 🛒 Marketplace App  
 
-#AMA Odoo Hackathon – Marketplace App
+A full-stack web application where users can **list, view, edit, and delete products**. Built with **Node.js, Express, Prisma, PostgreSQL (or MySQL), React, and JWT authentication**.  
 
-This project is a full-stack marketplace application built for the hackathon.
-It allows users to sign up, log in, list products for sale, browse others’ products, and manage their own listings.
+---
 
-#Features
+## 🚀 Features  
 
-#Authentication (JWT)
+- 🔐 **Authentication**: Secure login & signup with JWT  
+- 📦 **Product Listings**: Create, view, update, and delete products  
+- 🖼️ **Image Uploads**: Upload product images (Multer middleware)  
+- 👤 **User Ownership**: Only the owner can edit/delete their products  
+- ⚡ **API Integration**: RESTful backend connected to React frontend  
+- 🔍 **View Products**: Public browsing of listings with details  
+- 🛠️ **Error Handling**: Friendly error messages with status codes  
 
-User registration & login
+---
 
-Secure endpoints with JWT tokens
+## 🏗️ Tech Stack  
 
-Protected routes on frontend
+- **Frontend**: React, React Router, Axios  
+- **Backend**: Node.js, Express.js  
+- **Database**: Prisma ORM with PostgreSQL (can be swapped with MySQL/SQLite)  
+- **Auth**: JWT (JSON Web Token)  
+- **File Uploads**: Multer  
 
-#Product Listings
+---
 
-Create new product listings with image upload
-
-Browse all products
-
-Search & filter by category
-
-View product detail pages
-
-#Manage Listings
-
-Edit your own listings
-
-Delete your own listings
-
-Authorization enforced (only the owner can update/delete)
-
-#Image Handling
-
-Supports file upload (Multer)
-
-Stores images in /uploads
-
-Falls back to a placeholder image if no image is provided
-
-#Tech Stack
-
-Backend: Node.js, Express, Prisma ORM
-
-Frontend: React + Vite
-
-Auth: JWT
-
-Styling: Simple CSS inline styles (customizable)
-
-#1. Clone repo
-git clone https://github.com/<your-username>/ama-odoo-hackathon.git
-cd ama-odoo-hackathon
-
-2. Backend Setup
+# Backend Setup
 cd backend
 npm install
 
 
-#Create a .env file inside /backend:
+# Configure your .env file:
 
 DATABASE_URL="mysql://user:password@localhost:5432/marketplace"
-JWT_SECRET="supersecretkey"
-PORT=3000
+JWT_SECRET="your-secret-key"
+PORT=5000
 
 
-Run Prisma migrations:
+# Run Prisma migrations:
 
 npx prisma migrate dev --name init
 
 
-#Start backend:
+# Start backend server:
 
 npm run dev
 
-
-Server runs on: http://localhost:3000
-
-3. Frontend Setup
+# Frontend Setup
 cd frontend
 npm install
-
-
-Create .env inside /frontend:
-
-VITE_API_URL=http://localhost:3000/api
-
-
-#Start frontend:
-
 npm run dev
 
 
-App runs on: http://localhost:5173
+Frontend runs on http://localhost:5173
 
-🔑 Authentication
+Backend runs on http://localhost:5000
 
-Register: POST /api/auth/register
-Body: { "email": "test@mail.com", "password": "123456", "username": "tester" }
+# Authentication Flow
 
-Login: POST /api/auth/login
-Body: { "email": "test@mail.com", "password": "123456" }
-Response: { "token": "<JWT>" }
+Login / Register → Returns JWT Token
 
-The token is stored in localStorage via authStorage and added to requests with an Axios interceptor.
+Frontend stores token in localStorage
 
-📦 Products API
-Method	Endpoint	Auth	Description
-GET	/api/products	❌	Get all products
-GET	/api/products/:id	❌	Get product by ID
-POST	/api/products	✅	Create a new product
-PATCH	/api/products/:id	✅	Update product (owner only)
-DELETE	/api/products/:id	✅	Delete product (owner only)
+Requests to protected routes (POST, PATCH, DELETE) must include:
 
-Product Fields
+Authorization: Bearer <token>
 
-{
-  "id": "string",
-  "title": "Laptop",
-  "description": "Good condition",
-  "price": 200,
-  "category": "Electronics",
-  "image": "/uploads/xyz.png",
-  "location": "Bangalore",
-  "condition": "Used",
-  "userId": "user-id"
-}
+# API Endpoints
+Auth
+Method	Endpoint	Description	Auth Required
+POST	/auth/register	Register a new user	
+POST	/auth/login	Login and get token	
+Products
+Method	Endpoint	Description	Auth Required
+GET	/products	Get all products	
+GET	/products/:id	Get product by ID	
+POST	/products	Create new product	
+PATCH	/products/:id	Update product (owner only)	
+DELETE	/products/:id	Delete product (owner only)	
+# Frontend Features
 
-# Frontend Pages
+Home Page → Shows all products
 
-/ → Feed (browse/search all products)
+View Page → Shows product details
 
-/products/:id → Product Detail
+Add Product → Upload product with image
 
-/my-listings → User’s Listings (View/Edit/Delete your products)
+Edit Product → Owner can edit
 
-/product/new → Add new product
+Delete Product → Owner can delete
 
-/auth/login → Login
+🛠️ Development Scripts
 
-/auth/signup → Signup
+# Backend
 
-#Authorization
+npm run dev   # run with nodemon
 
-Only logged-in users (JWT in header) can create, update, or delete products.
 
-A product can only be modified or deleted by its owner (product.userId === req.user.id).
+# Frontend
 
-🔧 Future Improvements
+npm run dev   # start react app
 
-Cloud image upload (S3/Cloudinary)
 
-Better UI styling with Tailwind or Material UI
 
-Real-time updates with WebSockets
 
-Add Wishlist / Favorites feature
+
+
