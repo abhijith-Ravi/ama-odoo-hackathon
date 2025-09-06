@@ -1,6 +1,6 @@
 # 🛒 Marketplace App  
 
-A full-stack web application where users can **list, view, edit, and delete products**. Built with **Node.js, Express, Prisma, PostgreSQL (or MySQL), React, and JWT authentication**.  
+A full-stack web application where users can **list, view, edit, and delete products**. Built with **Node.js, Express, Prisma, mysql, React, and JWT authentication**.  
 
 ---
 
