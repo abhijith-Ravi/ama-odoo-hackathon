@@ -46,8 +46,8 @@ export default function AppRoutes() {
     <Routes>
       <Route path="/" element={wrap(<Home />)} />
       <Route path="/feed" element={wrap(<Feed />)} />
-      <Route path="/product/new" element={<Protected>{wrap(<ProductForm />)}</Protected>} />
-      <Route path="/product/:id" element={wrap(<ProductDetail />)} />
+      <Route path="/products/new" element={<Protected>{wrap(<ProductForm />)}</Protected>} />
+      <Route path="/products/:id" element={<Protected>{wrap(<ProductDetail />)} </Protected>}/>
       <Route path="/my-listings" element={<Protected>{wrap(<MyListings />)}</Protected>} />
       <Route path="/login" element={wrap(<Login />)} />
       <Route path="/signup" element={wrap(<Signup />)} />

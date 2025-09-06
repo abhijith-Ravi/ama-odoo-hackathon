@@ -12,11 +12,12 @@ export default function ProductDetail() {
     let cancelled = false
     setLoading(true)
     api.getProduct(id)
-      .then((res) => { if (!cancelled) setItem(res) })
+      .then((res) => { if (!cancelled) setItem(res); })
       .catch((e) => { if (!cancelled) setErr(e?.response?.data?.error || String(e)) })
       .finally(() => { if (!cancelled) setLoading(false) })
     return () => { cancelled = true }
   }, [id])
+  
 
   if (loading) return <div>Loading…</div>
   if (err) return <div style={{color:'#dc2626'}}>{err}</div>

@@ -25,13 +25,14 @@ export default function ProductForm() {
       await api.createProduct({
         title: title.trim(),
         description: description.trim(),
-        category,
         price: Number(price) || 0,
-        images: [image],
-        location: location.trim(),
-        condition,
+        category: category.trim(),
+        
+       
+        
       })
-      nav('/')
+      
+      
     } catch (e) {
       setErr(e?.response?.data?.error || String(e))
     } finally { setLoading(false) }

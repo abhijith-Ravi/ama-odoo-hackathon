@@ -22,6 +22,7 @@ export default function Login() {
             const me = await (async () => {
                 // Temporarily store token to call /me
                 localStorage.setItem('eco_token', token)
+                
                 try { return await api.me() } finally { /* will be overwritten by store below */ }
             })()
             setAuth(token, me)

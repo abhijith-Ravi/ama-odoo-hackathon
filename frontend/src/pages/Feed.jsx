@@ -23,7 +23,7 @@ export default function Feed() {
       <div style={{display:'flex', gap:8, alignItems:'center'}}>
         <input value={q} onChange={(e)=>setQ(e.target.value)} placeholder="Search title…"
                style={{flex:1, padding:'10px 12px', border:'1px solid #cbd5e1', borderRadius:8}}/>
-        <Link to="/product/new" style={{padding:'10px 12px', background:'#1DB954', color:'#fff', borderRadius:8}}>+ Add</Link>
+        <Link to="/products/new" style={{padding:'10px 12px', background:'#1DB954', color:'#fff', borderRadius:8}}>+ Add</Link>
       </div>
 
       <div style={{margin:'12px 0', display:'flex', gap:8, flexWrap:'wrap'}}>
@@ -43,7 +43,7 @@ export default function Feed() {
         <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(240px,1fr))', gap:16}}>
           {items.map((it, i) => (
             <div key={it.id || i} style={{border:'1px solid #e5e7eb', borderRadius:12, overflow:'hidden', background:'#fff'}}>
-              <Link to={`/product/${it.id || i}`} style={{display:'block'}}>
+              <Link to={`/products/${it.id || i}`} style={{display:'block'}}>
                 {it.image ? (
                   <img 
                     src={it.image} 

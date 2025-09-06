@@ -56,7 +56,7 @@ router.post('/login', async (req, res) => {
     const valid = await argon2.verify(user.password, password);
     if (!valid) return res.status(401).json({ error: 'Invalid credentials.' });
 
-    const payload = { email: user.email, sub: String(user.id) };
+    const payload = { id: user.id, email: user.email, username: user.username };
     const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' });
 
     return res.json({ token });

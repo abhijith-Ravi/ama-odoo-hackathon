@@ -41,7 +41,7 @@ export const api = {
   },
   async getProduct(id) {
     const { data } = await http.get(`/products/${id}`)
-    return data.listing || data.product
+    return data;
   },
   async updateProduct(id, body) {
     const { data } = await http.patch(`/products/${id}`, body)
