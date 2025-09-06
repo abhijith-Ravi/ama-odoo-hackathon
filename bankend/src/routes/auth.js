@@ -87,27 +87,30 @@ router.get('/me', requireAuth, async (req, res) => {
 });
 
 router.post('/forgot-password', async (req, res) => {
-  const { email } = req.body;
-  if (!email) {
-    return res.status(400).json({ error: 'Email is required.' });
+  try { 
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({ error: 'Email is required.' });
+    }
+    // To find user by email
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      // For security, don't reveal if email is not registered
+      return res.json({ message: 'If that email is registered, you will receive a password reset link.' });
+    }
+    const resetToken = jwt.sign({ email }, JWT_SECRET, { expiresIn: '15m' });
+    // Send the reset token via email
+    const resetLink = `https://your-frontend-url.com/reset-password?token=${resetToken}`;
+    await sendEmail({
+      to: email,
+      subject: 'Password Reset',
+      text: `Click the following link to reset your password: ${resetLink}`
+    });
+    res.json({ message: 'If that email is registered, you will receive a password reset link.' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to process forgot password.' });
   }
-
-  const user = await getUserByEmail(email);
-  if (!user) {
-    return res.json({ message: 'If that email is registered, you will receive a password reset link.' });
-  }
-
-  const resetToken = jwt.sign({ email }, JWT_SECRET, { expiresIn: '15m' });
-
-  // Send the reset token via email
-  const resetLink = `https://your-frontend-url.com/reset-password?token=${resetToken}`;
-  await sendEmail({
-    to: email,
-    subject: 'Password Reset',
-    text: `Click the following link to reset your password: ${resetLink}`
-  });
-
-  res.json({ message: 'If that email is registered, you will receive a password reset link.' });
 });
 
 
@@ -124,7 +127,12 @@ router.post('/reset-password', async (req, res) => {
     const decoded = jwt.verify(token, JWT_SECRET);
     const email = decoded.email;    
     const hashedPassword = await argon2.hash(newPassword);
-    // TODO: Update user's password in the database
+    
+     await prisma.user.update({
+      where: { email },
+      data: { password: hashedPassword }
+    });
+
     res.json({ message: 'Password reset successful.' });
   } catch (err) {
     return res.status(400).json({ error: 'Invalid or expired token.' });
@@ -138,3 +146,4 @@ router.post('/logout', (req, res) => {
 
 
 module.exports = router;
+
