@@ -8,9 +8,24 @@ generator client {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
+  id        String    @id @default(uuid())
   email     String   @unique
   password  String
   username  String
   createdAt DateTime @default(now())
+
+  products Product[]
 }
+model Product {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  price       Float
+  category    String
+  image       String   // placeholder URL or path
+  userId      String
+  createdAt   DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
+
