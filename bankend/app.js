@@ -13,6 +13,8 @@ app.use(cors({
 }));
 app.use(express.json());
 
+app.use('/api', require('./src/routes/products'));
+
 app.get('/api/health', (_req, res) => res.json({ ok: true }));
 
 app.use('/api/auth', require('./src/routes/auth'));
