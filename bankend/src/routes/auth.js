@@ -3,6 +3,7 @@ const argon2 = require('argon2');
 const jwt = require('jsonwebtoken');
 const { PrismaClient } = require('@prisma/client');
 const requireAuth = require('../middleware/auth');
+const sendEmail = require('../utils/sendEmail');
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -85,4 +86,61 @@ router.get('/me', requireAuth, async (req, res) => {
   }
 });
 
+router.post('/forgot-password', async (req, res) => {
+  try { 
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({ error: 'Email is required.' });
+    }
+    // To find user by email
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      // For security, don't reveal if email is not registered
+      return res.json({ message: 'If that email is registered, you will receive a password reset link.' });
+    }
+    const resetToken = jwt.sign({ email }, JWT_SECRET, { expiresIn: '15m' });
+    // Send the reset token via email
+    const resetLink = `https://your-frontend-url.com/reset-password?token=${resetToken}`;
+    await sendEmail({
+      to: email,
+      subject: 'Password Reset',
+      text: `Click the following link to reset your password: ${resetLink}`
+    });
+    res.json({ message: 'If that email is registered, you will receive a password reset link.' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to process forgot password.' });
+  }
+});
+
+
+
+router.post('/reset-password', async (req, res) => {
+  const { token, newPassword } = req.body;
+  if (!token || !newPassword) {
+    return res.status(400).json({ error: 'Token and new password are required.' });
+  }
+  if (newPassword.length < 8) {
+    return res.status(400).json({ error: 'Password must be at least 8 characters.' });
+  }
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const email = decoded.email;    
+    const hashedPassword = await argon2.hash(newPassword);
+    
+     await prisma.user.update({
+      where: { email },
+      data: { password: hashedPassword }
+    });
+
+    res.json({ message: 'Password reset successful.' });
+  } catch (err) {
+    return res.status(400).json({ error: 'Invalid or expired token.' });
+  }
+});
+
+
+
 module.exports = router;
+
+
