@@ -139,11 +139,8 @@ router.post('/reset-password', async (req, res) => {
   }
 });
 
-router.post('/logout', (req, res) => {
-  // For JWT, logout is handled on the client by deleting the token.
-  res.json({ message: 'Logged out. Please remove the token on the client.' });
-});
 
 
 module.exports = router;
+
 
