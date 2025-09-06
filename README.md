@@ -2,7 +2,11 @@
 
 A full-stack web application where users can **list, view, edit, and delete products**. Built with **Node.js, Express, Prisma, mysql, React, and JWT authentication**.  
 
+## Video link
+
+https://drive.google.com/file/d/1prgbEudfNr92pE6QZhvBeuQcTCV5eq13/view?usp=sharing
 ---
+
 
 ## 🚀 Features  
 
@@ -104,6 +108,4 @@ npm run dev   # run with nodemon
 npm run dev   # start react app
 
 
-## Video link
 
-https://drive.google.com/file/d/1prgbEudfNr92pE6QZhvBeuQcTCV5eq13/view?usp=sharing
