@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { api } from '../api/client'
+import { api, resolveImageUrl } from '../api/client'
 
 export default function Feed() {
   const [q,setQ] = useState('')
@@ -41,27 +41,26 @@ export default function Feed() {
 
       {loading ? <div>Loading…</div> : (
         <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(240px,1fr))', gap:16}}>
-          {items.map((it, i) => (
-            <div key={it.id || i} style={{border:'1px solid #e5e7eb', borderRadius:12, overflow:'hidden', background:'#fff'}}>
-              <Link to={`/products/${it.id || i}`} style={{display:'block'}}>
-                {it.image ? (
-                  <img 
-                    src={it.image} 
-                    alt={it.title || 'Product'} 
-                    style={{width:'100%', height:176, objectFit:'cover'}}
-                  />
-                ) : (
-                  <div style={{height:176, background:'#e2e8f0', display:'flex', alignItems:'center', justifyContent:'center'}}>
-                    Image Placeholder
-                  </div>
-                )}
-              </Link>
-              <div style={{padding:12}}>
-                <div style={{fontWeight:600}}>{it.title || 'Untitled'}</div>
-                <div style={{color:'#1DB954', fontWeight:600}}>${Number(it.price || 0).toFixed(2)}</div>
+          {items.map((it, i) => {
+            const img = resolveImageUrl(it.image)
+            return (
+              <div key={it.id || i} style={{border:'1px solid #e5e7eb', borderRadius:12, overflow:'hidden', background:'#fff'}}>
+                <Link to={`/products/${it.id || i}`} style={{display:'block'}}>
+                  {img ? (
+                    <img src={img} alt={it.title || 'Product'} style={{width:'100%', height:176, objectFit:'cover'}} />
+                  ) : (
+                    <div style={{height:176, background:'#e2e8f0', display:'flex', alignItems:'center', justifyContent:'center'}}>
+                      Image Placeholder
+                    </div>
+                  )}
+                </Link>
+                <div style={{padding:12}}>
+                  <div style={{fontWeight:600}}>{it.title || 'Untitled'}</div>
+                  <div style={{color:'#1DB954', fontWeight:600}}>${Number(it.price || 0).toFixed(2)}</div>
+                </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
           {items.length === 0 && <div>No products yet.</div>}
         </div>
       )}

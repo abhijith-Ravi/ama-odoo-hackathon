@@ -19,6 +19,8 @@ app.get('/api/health', (_req, res) => res.json({ ok: true }));
 
 app.use('/api/auth', require('./src/routes/auth'));
 
+app.use('/uploads', express.static('uploads'));
+
 // Basic error handler (Express 5)
 app.use((err, _req, res, _next) => {
   console.error(err);

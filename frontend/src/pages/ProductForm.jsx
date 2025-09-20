@@ -10,29 +10,26 @@ export default function ProductForm() {
   const [description,setDescription] = useState('')
   const [category,setCategory] = useState('Other')
   const [price,setPrice] = useState('')
-  const [location,setLocation] = useState('')
-  const [condition,setCondition] = useState('Good')
+  const [image, setImage] = useState(null)
   const [loading,setLoading] = useState(false)
   const [err,setErr] = useState('')
-  const [image, setImage] = useState(null);
-
 
   const submit = async (e) => {
     e.preventDefault()
     setErr(''); setLoading(true)
     try {
       if (!token) throw new Error('Please log in first.')
-      await api.createProduct({
-        title: title.trim(),
-        description: description.trim(),
-        price: Number(price) || 0,
-        category: category.trim(),
-        
-       
-        
-      })
-      
-      
+
+      const fd = new FormData()
+      fd.append('title', title.trim())
+      fd.append('description', description.trim())
+      fd.append('category', category)
+      fd.append('price', String(Number(price) || 0))
+      if (image) fd.append('image', image) // must be 'image' to match multer.single('image')
+
+      const created = await api.createProduct(fd)
+      if (created?.id) nav(`/products/${created.id}`)
+      else nav('/feed')
     } catch (e) {
       setErr(e?.response?.data?.error || String(e))
     } finally { setLoading(false) }
@@ -51,7 +48,7 @@ export default function ProductForm() {
                   style={{padding:'10px 12px', border:'1px solid #cbd5e1', borderRadius:8}}/>
         <input value={price} onChange={(e)=>setPrice(e.target.value)} placeholder="Price" required
                style={{padding:'10px 12px', border:'1px solid #cbd5e1', borderRadius:8}}/>
-        <input value={location} onChange={(e)=>setLocation(e.target.value)} placeholder="Location (optional)"
+                       <input value={location} onChange={(e)=>setLocation(e.target.value)} placeholder="Location (optional)"
                style={{padding:'10px 12px', border:'1px solid #cbd5e1', borderRadius:8}}/>
         <select value={condition} onChange={(e)=>setCondition(e.target.value)} style={{padding:'10px 12px', border:'1px solid #cbd5e1', borderRadius:8}}>
           {['New','Like New','Good','Fair','Poor'].map(c => <option key={c} value={c}>{c}</option>)}
@@ -67,6 +64,9 @@ export default function ProductForm() {
           }}
           style={{ padding: '10px 12px', border: '1px solid #cbd5e1', borderRadius: 8 }}
         />
+        <input type="file" accept="image/*"
+               onChange={(e) => { const f = e.target.files?.[0]; if (f) setImage(f) }}
+               style={{ padding: '10px 12px', border: '1px solid #cbd5e1', borderRadius: 8 }} />
         <button disabled={loading} style={{padding:'10px 12px', background:'#1DB954', color:'#fff', borderRadius:8}}>
           {loading ? 'Submitting…' : 'Submit Listing'}
         </button>
